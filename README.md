@@ -2,23 +2,23 @@
 
 ## Spack-freeze
 
-a [Spack extension](https://spack.readthedocs.io/en/latest/extensions.html#custom-extensions) to generate a packages.yaml fragment listing a package and its dependencies as non-buildable externals.
+a [Spack extension](https://spack.readthedocs.io/en/latest/extensions.html#custom-extensions) to generate an  environment spack.yaml files from others, containing unlisted, shared, dependencies
 
 
 ### Usage
 
 In most cases you can just do:
 
-  spack freeze pkg@ver1 > freeze_pkg.yaml
+  spack intersection e1_spack.yaml e2_spack.yaml e3_spack.yaml
 
-You can then include freeze_package.yaml in an envrionment spack.yaml file
-to use that package as a dependency.
+It will generate an "intersection_spack.yaml" file which you can
+use to create overlapping environments, as:
 
-    spack:
-      include:
-      - freeze_pkg.yaml
-      specs: [pkg2@ver2 ^pkg@ver1]
-
-### Installation
-
-After cloning the repository somewhere, See the [Spack docs](https://spack.readthedocs.io/en/latest/extensions.html#configure-spack-to-use-extensions) on adding the path to config.yaml under 'extensions:'
+```
+spack env create int_env e1_spack.yaml
+spack -e int_env concretize 
+spack env create --include-concrete int_env e1 e1_spack.yaml
+spack env create --include-concrete int_env e2 e2_spack.yaml
+spack env create --include-concrete int_env e3 e3_spack.yaml
+```
+and those environments should share dependencies.
