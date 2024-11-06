@@ -167,7 +167,7 @@ def intersection(parser, args):
     # cleanup, pick up, put away... 
     for i in range(count+1):
         saw_conc = False
-        cmd = f"spack env remove {base}_{i}"
+        cmd = f"spack env remove -y {base}_{i}"
         tty.info(f"running: {cmd}")
         os.system(cmd)
         os.unlink( f"conc_{i}.out" )
