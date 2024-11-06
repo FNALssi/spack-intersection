@@ -171,7 +171,7 @@ def intersection(parser, args):
         tty.info(f"running: {cmd}")
         os.system(cmd)
         os.unlink( f"{base}_conc_{i}.out" )
-        os.unlink( msyf )
+    os.unlink( msyf )
 
     # now make the intersection.spack.yaml
     # it's the union one, but with unify concretization and just the
