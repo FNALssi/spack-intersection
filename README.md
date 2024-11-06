@@ -1,6 +1,6 @@
 
 
-## Spack-freeze
+## Spack-intersection
 
 a [Spack extension](https://spack.readthedocs.io/en/latest/extensions.html#custom-extensions) to generate an  environment spack.yaml files from others, containing unlisted, shared, dependencies
 
