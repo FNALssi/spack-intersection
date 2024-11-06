@@ -19,13 +19,15 @@ level = "short"
 
 
 def setup_parser(subparser):
-    subparser.add_argument("spack_yaml", nargs='+', help="environment spack.yaml file(s)", default=[], action="append") 
+    subparser.add_argument("spack_yaml", nargs='+', help="environment spack.yaml file(s)",  action="append") 
 
 
 def intersection(parser, args):
     
     ''' find common "intersection" packages between a set/list
         of environment spack.yaml files.'''
+
+    tty.debug(f"args.spack_yaml is {repr(args.spack_yaml)}")
 
     # pick a unique base for environment names...
     base = f"cs_env_{os.getpid()}_{int(time.time())}"
@@ -36,7 +38,7 @@ def intersection(parser, args):
     # regexp to substitute with blank to cleanup specs
     cleanupre = re.compile( r"(patches|build_system)=[a-z0-9_,]*" )
 
-    for syf in args.spack_yaml:
+    for syf in args.spack_yaml[0]:
         tty.debug(f"examining {syf}")
         count = count + 1
         _env_create( f"{base}_{count}", init_file = syf )  
