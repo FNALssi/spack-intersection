@@ -99,7 +99,7 @@ def intersection(parser, args):
     squashre = re.compile('  *')
     for i in range(count+1):
         saw_conc = False
-        cmd = f"spack -e {base}_{i} concretize -f 2>&1 | tee conc_{i}.out"
+        cmd = f"spack -e {base}_{i} concretize -f 2>&1 | tee {base}_conc_{i}.out"
         tty.debug(f"running: {cmd}")
         with os.popen(cmd,"r") as scf:
             for dep_l in scf.readlines():
@@ -149,7 +149,7 @@ def intersection(parser, args):
                     combdeps[dep_pkg] = dep_l
             res = scf.close()
             if res != None:
-                tty.warn(f"concretizing {base}_{i} failed, leaving temp environments, see conc_{i}.out")
+                tty.warn(f"concretizing {base}_{i} failed, leaving temp environments, see {base}_conc_{i}.out")
                 exit(1)
 
     tty.debug("last_dep_env: ", repr(last_dep_env))
@@ -170,7 +170,8 @@ def intersection(parser, args):
         cmd = f"spack env remove -y {base}_{i}"
         tty.info(f"running: {cmd}")
         os.system(cmd)
-        os.unlink( f"conc_{i}.out" )
+        os.unlink( f"{base}_conc_{i}.out" )
+        os.unlink( msyf )
 
     # now make the intersection.spack.yaml
     # it's the union one, but with unify concretization and just the
