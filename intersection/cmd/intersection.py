@@ -99,7 +99,7 @@ def intersection(parser, args):
     squashre = re.compile('  *')
     for i in range(count+1):
         saw_conc = False
-        cmd = f"spack -e {base}_{i} concretize -f 2>&1 | tee {base}_conc_{i}.out"
+        cmd = f"spack -e {base}_{i} concretize --deprecated -f 2>&1 | tee {base}_conc_{i}.out"
         tty.debug(f"running: {cmd}")
         with os.popen(cmd,"r") as scf:
             for dep_l in scf.readlines():
