@@ -77,10 +77,10 @@ def intersection(parser, args):
           {"type": "external"},
         ]
       },
-      "duplicates": {
-        "strategy": "none",
-      }
     }
+#      "duplicates": {
+#        "strategy": "none",
+#      }
     merged_content['spack']['include_concrete'] = []
 
     msyf = base+"_merge_spack.yaml"
@@ -101,7 +101,9 @@ def intersection(parser, args):
         saw_conc = False
         cmd = f"spack -e {base}_{i} concretize --deprecated -f 2>&1 | tee {base}_conc_{i}.out"
         tty.debug(f"running: {cmd}")
-        with os.popen(cmd,"r") as scf:
+        depset = set()
+        scf = os.popen(cmd,"r")
+        if scf:
             for dep_l in scf.readlines():
                 # skip information messages/warnings
                 if dep_l.find('==> ') == 0:
@@ -130,6 +132,12 @@ def intersection(parser, args):
                     # skip certain packages...
                     continue
 
+                if i == 0 and dep_pkg not in combdeps:
+                    combdeps[dep_pkg] = dep_l
+
+                depset.add(dep_pkg)
+
+            for dep_pkg in depset:
                 # bookkeeping...
                 if not (dep_pkg in depcounts):
                     depcounts[dep_pkg] = 0
@@ -145,12 +153,11 @@ def intersection(parser, args):
                     # mark it so we don't count it in this env again
                     last_dep_env[dep_pkg] = i
 
-                if i == 0 and dep_pkg not in combdeps:
-                    combdeps[dep_pkg] = dep_l
-            res = scf.close()
-            if res != None:
-                tty.warn(f"concretizing {base}_{i} failed, leaving temp environments, see {base}_conc_{i}.out")
-                exit(1)
+
+        res = scf.close()
+        if res != None:
+            tty.warn(f"concretizing {base}_{i} failed, leaving temp environments, see {base}_conc_{i}.out")
+            exit(1)
 
     tty.debug("last_dep_env: ", repr(last_dep_env))
     tty.debug("depcounts: ", repr(depcounts))
