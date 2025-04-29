@@ -65,6 +65,8 @@ def intersection(parser, args):
                 merged_content['spack'][k] = content['spack'][k]
             sys.stdout.flush()
 
+    threshold = (count + 1) // 2
+
     # turn off views in the merge as they *never* come out happy from the merge...
     merged_content['spack']['view'] = False
     # set the concretizer how we like it...
@@ -102,9 +104,15 @@ def intersection(parser, args):
         cmd = f"spack -e {base}_{i} concretize --deprecated -f 2>&1 | tee {base}_conc_{i}.out"
         tty.debug(f"running: {cmd}")
         depset = set()
+        ok = True
         scf = os.popen(cmd,"r")
         if scf:
             for dep_l in scf.readlines():
+
+                if (dep_l.find("satisfy a requirement for package") >= 0 or
+                   dep_l.find("Error: failed to concretize ") >= 0):
+                    ok = False
+
                 # skip information messages/warnings
                 if dep_l.find('==> ') == 0:
                     continue
@@ -155,7 +163,7 @@ def intersection(parser, args):
 
 
         res = scf.close()
-        if res != None:
+        if res != None or not ok:
             tty.warn(f"concretizing {base}_{i} failed, leaving temp environments, see {base}_conc_{i}.out")
             exit(1)
 
@@ -168,7 +176,7 @@ def intersection(parser, args):
     # combined deps...
     shareddeps = []
     for dep_pkg in depcounts:
-        if depcounts[dep_pkg] > 1 and dep_pkg in combdeps and not dep_pkg in roots:
+        if depcounts[dep_pkg] > threshold and dep_pkg in combdeps and not dep_pkg in roots:
             shareddeps.append( cleanupre.sub('', combdeps[dep_pkg]).strip() )
 
     # cleanup, pick up, put away... 
