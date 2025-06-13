@@ -8,9 +8,9 @@ import spack.environment as ev
 import spack.cmd.common.arguments as arguments
 import spack.util.spack_yaml as syaml
 try:
-    import _vendoring.ruamel.yaml
+    import _vendoring.ruamel.yaml as ruamel_yaml
 except:
-    import ruamel.yaml
+    import ruamel.yaml as ruamel_yaml
 from spack.cmd.env import _env_create
 import llnl.util.tty.color
 import llnl.util.tty as tty
@@ -34,7 +34,7 @@ def intersection(parser, args):
 
     # pick a unique base for environment names...
     base = f"cs_env_{os.getpid()}_{int(time.time())}"
-    yaml_merge = ruamel.yaml.YAML(typ="rt", pure=True)
+    yaml_merge = ruamel_yaml.YAML(typ="rt", pure=True)
     count = 0
     merged_content = {'spack':{}}
     
