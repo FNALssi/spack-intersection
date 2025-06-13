@@ -7,7 +7,7 @@ import spack.cmd
 import spack.environment as ev
 import spack.cmd.common.arguments as arguments
 import spack.util.spack_yaml as syaml
-import ruamel.yaml
+import _vendoring.ruamel.yaml
 from spack.cmd.env import _env_create
 import llnl.util.tty.color
 import llnl.util.tty as tty
