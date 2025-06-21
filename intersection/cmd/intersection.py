@@ -22,6 +22,7 @@ level = "short"
 
 
 def setup_parser(subparser):
+    subparser.add_argument("--keep-envs", action="store_true", help="keep temporary environments for concretizing")
     subparser.add_argument("spack_yaml", nargs='+', help="environment spack.yaml file(s)",  action="append") 
 
 
@@ -183,13 +184,14 @@ def intersection(parser, args):
             shareddeps.append( cleanupre.sub('', combdeps[dep_pkg]).strip() )
 
     # cleanup, pick up, put away... 
-    for i in range(count+1):
-        saw_conc = False
-        cmd = f"spack env remove -y {base}_{i}"
-        tty.info(f"running: {cmd}")
-        os.system(cmd)
-        os.unlink( f"{base}_conc_{i}.out" )
-    os.unlink( msyf )
+    if not args.keep_envs:
+        for i in range(count+1):
+            saw_conc = False
+            cmd = f"spack env remove -y {base}_{i}"
+            tty.info(f"running: {cmd}")
+            os.system(cmd)
+            os.unlink( f"{base}_conc_{i}.out" )
+        os.unlink( msyf )
 
     # now make the intersection.spack.yaml
     # it's the union one, but with unify concretization and just the
