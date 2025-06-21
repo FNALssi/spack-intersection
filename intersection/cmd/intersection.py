@@ -40,7 +40,7 @@ def intersection(parser, args):
     merged_content = {'spack':{}}
     
     # regexp to substitute with blank to cleanup specs
-    cleanupre = re.compile( r"(patches|build_system)=[a-z0-9_,]*" )
+    cleanupre = re.compile( r"(patches|build_system):?=[a-z0-9_,]*" )
 
     for syf in args.spack_yaml[0]:
         tty.debug(f"examining {syf}")
@@ -75,7 +75,7 @@ def intersection(parser, args):
     merged_content['spack']['view'] = False
     # set the concretizer how we like it...
     merged_content['spack']['concretizer'] = {
-      "unify": 'when_possible',
+      "unify": 'true',
       "reuse": {
         "roots": True,
         "from": [
