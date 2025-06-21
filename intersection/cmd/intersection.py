@@ -75,7 +75,7 @@ def intersection(parser, args):
     merged_content['spack']['view'] = False
     # set the concretizer how we like it...
     merged_content['spack']['concretizer'] = {
-      "unify": 'true',
+      "unify": 'when_possible',
       "reuse": {
         "roots": True,
         "from": [
@@ -198,6 +198,7 @@ def intersection(parser, args):
     # shared dependencies as specs
     shareddeps.sort()
     merged_content['spack']['specs'] =  shareddeps
+    merged_content['spack']['concretizer']['unify'] = 'true'
 
     msyf = "intersection_spack.yaml"
     with open(msyf, "w") as msy:
