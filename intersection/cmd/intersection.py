@@ -22,6 +22,7 @@ level = "short"
 
 
 def setup_parser(subparser):
+    subparser.add_argument("--threshold", help="package must be in more than this many environments to be included")
     subparser.add_argument("--keep-envs", action="store_true", help="keep temporary environments for concretizing")
     subparser.add_argument("spack_yaml", nargs='+', help="environment spack.yaml file(s)",  action="append") 
 
@@ -69,7 +70,10 @@ def intersection(parser, args):
                 merged_content['spack'][k] = content['spack'][k]
             sys.stdout.flush()
 
-    threshold = (count + 1) // 2
+    if args.threshold:
+        threshold = int(args.threshold)
+    else:
+        threshold = (count + 1) // 2
 
     # turn off views in the merge as they *never* come out happy from the merge...
     merged_content['spack']['view'] = False
