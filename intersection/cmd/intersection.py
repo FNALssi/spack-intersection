@@ -100,6 +100,7 @@ def intersection(parser, args):
     _env_create( f"{base}_0", init_file = msyf)
     
     deps_l_l = []
+    dep_depth = {}
     scan = []
     maxl = 0
     depcounts = {}
@@ -150,6 +151,15 @@ def intersection(parser, args):
 
                 if i == 0 and dep_pkg not in combdeps:
                     combdeps[dep_pkg] = dep_l
+                    dep_depth[dep_pkg] = pos
+
+                if combdeps[dep_pkg] != dep_l:
+                    tty.warn(f"conflicts for {dep_pkg}:\n   {dep_l}\n  {combdeps[dep_pkg]}")
+                    # if it is a less deeply nested package, take it
+                    if pos < dep_depth[dep_pkg]:
+                        tty.warn(f"updated {dep_pkg}.")
+                        combdeps[dep_pkg] = dep_l
+                        dep_depth[dep_pkg] = pos
 
                 depset.add(dep_pkg)
 
