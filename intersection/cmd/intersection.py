@@ -8,12 +8,12 @@ import spack.environment as ev
 import spack.cmd.common.arguments as arguments
 import spack.util.spack_yaml as syaml
 try:
-    import _vendoring.ruamel.yaml as ruamel_yaml
-except:
     import ruamel.yaml as ruamel_yaml
+except:
+    import spack.vendor.ruamel.yaml as ruamel_yaml
 from spack.cmd.env import _env_create
-import llnl.util.tty.color
-import llnl.util.tty as tty
+import spack.llnl.util.tty.color
+import spack.llnl.util.tty as tty
 
 
 description = "Build spack.yaml for an environment which is the intersection of the dependencies of several spack.yaml files"
@@ -153,7 +153,7 @@ def intersection(parser, args):
                     combdeps[dep_pkg] = dep_l
                     dep_depth[dep_pkg] = pos
 
-                if combdeps[dep_pkg].strip() != dep_l.strip():
+                if combdeps.get(dep_pkg,'').strip() != dep_l.strip():
                     tty.warn(f"conflicts for {dep_pkg}:\n   {dep_l}   {combdeps[dep_pkg]}")
                     # if it is a less deeply nested package, take it
                     tty.debug(f"depth: {pos} vs {dep_depth[dep_pkg]}")
