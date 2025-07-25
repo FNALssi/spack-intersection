@@ -156,8 +156,8 @@ def intersection(parser, args):
                 if combdeps.get(dep_pkg,'').strip() != dep_l.strip():
                     tty.warn(f"conflicts for {dep_pkg}:\n   {dep_l}   {combdeps.get(dep_pkg,'')}")
                     # if it is a less deeply nested package, take it
-                    tty.debug(f"depth: {pos} vs {dep_depth[dep_pkg]}")
-                    if pos > dep_depth[dep_pkg]:
+                    tty.debug(f"depth: {pos} vs {dep_depth.get(dep_pkg,0)}")
+                    if pos > dep_depth.get(dep_pkg,0):
                         tty.warn(f"updated {dep_pkg}.")
                         combdeps[dep_pkg] = dep_l
                         dep_depth[dep_pkg] = pos
