@@ -213,7 +213,7 @@ def intersection(parser, args):
     # shared dependencies as specs
     shareddeps.sort()
     merged_content['spack']['specs'] =  shareddeps
-    merged_content['spack']['concretizer']['unify'] = 'true'
+    merged_content['spack']['concretizer']['unify'] = True
 
     msyf = "intersection_spack.yaml"
     with open(msyf, "w") as msy:
