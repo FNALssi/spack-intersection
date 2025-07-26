@@ -24,7 +24,9 @@ level = "short"
 def setup_parser(subparser):
     subparser.add_argument("--threshold", help="package must be in more than this many environments to be included")
     subparser.add_argument("--keep-envs", action="store_true", help="keep temporary environments for concretizing")
+    subparser.add_argument("--unify", action="store_true", help="use unify: true instaed of unify: when_possible")
     subparser.add_argument("spack_yaml", nargs='+', help="environment spack.yaml file(s)",  action="append") 
+  
 
 
 def intersection(parser, args):
@@ -75,11 +77,16 @@ def intersection(parser, args):
     else:
         threshold = (count + 1) // 2
 
+    if args.unify:
+        unify_val = True
+    else:
+        unify_val = 'when_possible',
+
     # turn off views in the merge as they *never* come out happy from the merge...
     merged_content['spack']['view'] = False
     # set the concretizer how we like it...
     merged_content['spack']['concretizer'] = {
-      "unify": True, # 'when_possible',
+      "unify": unify_val,
       "reuse": {
         "roots": True,
         "from": [
