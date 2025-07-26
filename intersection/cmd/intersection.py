@@ -79,7 +79,7 @@ def intersection(parser, args):
     merged_content['spack']['view'] = False
     # set the concretizer how we like it...
     merged_content['spack']['concretizer'] = {
-      "unify": 'when_possible',
+      "unify": True, # 'when_possible',
       "reuse": {
         "roots": True,
         "from": [
