@@ -80,7 +80,7 @@ def intersection(parser, args):
     if args.unify:
         unify_val = True
     else:
-        unify_val = 'when_possible',
+        unify_val = 'when_possible'
 
     # turn off views in the merge as they *never* come out happy from the merge...
     merged_content['spack']['view'] = False
